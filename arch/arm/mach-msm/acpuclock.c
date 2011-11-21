@@ -238,6 +238,10 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
 	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 122880 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
 	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 122880 },
+	{ 1, 806400, ACPU_PLL_0, 4, 0, 201600, 3, 7, 122880 },
+	{ 1, 825600, ACPU_PLL_0, 4, 0, 206400, 3, 7, 122880 },
+	{ 1, 844800, ACPU_PLL_0, 4, 0, 211200, 3, 7, 122880 },
+	{ 1, 864000, ACPU_PLL_0, 4, 0, 216000, 3, 7, 122880 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
@@ -252,6 +256,10 @@ static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_800[] = {
 	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 120000 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 120000 },
 	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 120000 },
+	{ 1, 806400, ACPU_PLL_0, 4, 0, 201600, 3, 7, 122880 },
+	{ 1, 825600, ACPU_PLL_0, 4, 0, 206400, 3, 7, 122880 },
+	{ 1, 844800, ACPU_PLL_0, 4, 0, 211200, 3, 7, 122880 },
+	{ 1, 864000, ACPU_PLL_0, 4, 0, 216000, 3, 7, 122880 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
@@ -423,7 +431,7 @@ static int acpuclk_set_vdd_level(int vdd)
 /* Set proper dividers for the given clock speed. */
 static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 {
-	uint32_t reg_clkctl, reg_clksel, clk_div, src_sel;
+	uint32_t reg_clkctl, reg_clksel, clk_div, src_sel, a11_div;
 
 	reg_clksel = readl(A11S_CLK_SEL_ADDR);
 
@@ -432,6 +440,14 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	/* CLK_SEL_SRC1NO */
 	src_sel = reg_clksel & 1;
 
+	a11_div = hunt_s->a11clk_src_div;
+
+	if(hunt_s->a11clk_khz>800000) {
+					a11_div=0;
+					writel(hunt_s->a11clk_khz/19200, PLLn_L_VAL(0));
+					udelay(50);
+			}
+
 	/*
 	 * If the new clock divider is higher than the previous, then
 	 * program the divider before switching the clock
@@ -439,13 +455,20 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	if (hunt_s->ahbclk_div > clk_div) {
 		reg_clksel &= ~(0x3 << 1);
 		reg_clksel |= (hunt_s->ahbclk_div << 1);
+		//OC HACK writel(reg_clksel, A11S_CLK_SEL_ADDR);
+		//reg_clksel |=a11_div;
 		writel(reg_clksel, A11S_CLK_SEL_ADDR);
 	}
 
 	/* Program clock source and divider */
 	reg_clkctl = readl(A11S_CLK_CNTL_ADDR);
 	reg_clkctl &= ~(0xFF << (8 * src_sel));
+	//OC HACK reg_clkctl |= hunt_s->a11clk_src_sel << (4 + 8 * src_sel);
+	reg_clkctl |=a11_div;
 	reg_clkctl |= hunt_s->a11clk_src_sel << (4 + 8 * src_sel);
+
+	//OC HACK reg_clkctl |= hunt_s->a11clk_src_div << (0 + 8 * src_sel);
+	reg_clkctl |=a11_div;
 	reg_clkctl |= hunt_s->a11clk_src_div << (0 + 8 * src_sel);
 	writel(reg_clkctl, A11S_CLK_CNTL_ADDR);
 

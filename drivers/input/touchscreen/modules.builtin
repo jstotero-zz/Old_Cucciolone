@@ -1,0 +1,2 @@
+kernel/drivers/input/touchscreen/syn_rmi.ko
+kernel/drivers/input/touchscreen/syn_reflash.ko
