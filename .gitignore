@@ -9,6 +9,9 @@
 #
 # Normal rules
 #
+
+setenv_jst.sh
+
 .*
 *.o
 *.o.*
