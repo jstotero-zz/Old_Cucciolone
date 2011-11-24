@@ -78,7 +78,7 @@ static void check_stdin(void)
 static int conf_askvalue(struct symbol *sym, const char *def)
 {
 	enum symbol_type type = sym_get_type(sym);
-
+	char *r;
 	if (!sym_has_value(sym))
 		printf(_("(NEW) "));
 
@@ -102,7 +102,9 @@ static int conf_askvalue(struct symbol *sym, const char *def)
 		check_stdin();
 	case ask_all:
 		fflush(stdout);
-		fgets(line, 128, stdin);
+		r = fgets(line, 128, stdin);
+		if (!r)
+	      line[0] = '\0';
 		return 1;
 	default:
 		break;
@@ -230,6 +232,7 @@ static int conf_choice(struct menu *menu)
 	struct menu *child;
 	int type;
 	bool is_new;
+	char *r;
 
 	sym = menu->sym;
 	type = sym_get_type(sym);
@@ -304,7 +307,9 @@ static int conf_choice(struct menu *menu)
 			check_stdin();
 		case ask_all:
 			fflush(stdout);
-			fgets(line, 128, stdin);
+			r = fgets(line, 128, stdin);
+			if (!r)
+		      line[0] = '\0';
 			strip(line);
 			if (line[0] == '?') {
 				print_help(menu);
