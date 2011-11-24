@@ -51,6 +51,10 @@
 #include "mdp.h"
 #include "mdp4.h"
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
+#undef CONFIG_HAS_EARLYSUSPEND
+#endif
+
 #ifdef CONFIG_FB_MSM_LOGO
 #define INIT_IMAGE_FILE "/initlogo.rle"
 extern int load_565rle_image(char *filename);
@@ -118,12 +122,14 @@ static int msm_fb_ioctl(struct fb_info *info, unsigned int cmd,
 			unsigned long arg);
 static int msm_fb_mmap(struct fb_info *info, struct vm_area_struct * vma);
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 #ifdef CONFIG_LGE_GRAM_REFRESH_PATCH
 static struct fb_var_screeninfo *last_var;
 static struct fb_info *last_info;
 static struct early_suspend additional_early_suspend;
 static void msmfb_early_suspend_early(struct early_suspend *h);
 static void msmfb_late_resume_late(struct early_suspend *h);
+#endif
 #endif
 
 /* LGE_CHANGE_S
@@ -1418,9 +1424,12 @@ static int msm_fb_pan_display(struct fb_var_screeninfo *var,
 	struct mdp_dirty_region *dirtyPtr = NULL;
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 #ifdef CONFIG_LGE_GRAM_REFRESH_PATCH
+
 	last_var = var;
 	last_info = info;
+#endif
 #endif
 
 	if ((!mfd->op_enable) || (!mfd->panel_power_on))

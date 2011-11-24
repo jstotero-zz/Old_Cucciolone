@@ -53,6 +53,10 @@
 
 #include "msm_fb_panel.h"
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
+#undef CONFIG_HAS_EARLYSUSPEND
+#endif
+
 extern uint32 mdp_hw_revision;
 extern ulong mdp4_display_intf;
 
