@@ -45,7 +45,7 @@
 #define PLLn_MODE(n)	(MSM_CLK_CTL_BASE + 0x300 + 28 * (n))
 #define PLLn_L_VAL(n)	(MSM_CLK_CTL_BASE + 0x304 + 28 * (n))
 
-#define OVERCLOCK_AHB
+//#define OVERCLOCK_AHB
 
 #define dprintk(msg...) \
 	cpufreq_debug_printk(CPUFREQ_DEBUG_DRIVER, "cpufreq-msm", msg)
@@ -228,8 +228,8 @@ static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_1200[] = {
 	{ 1, 600000, ACPU_PLL_2, 2, 1, 200000, 2, 7, 120000 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
+
 /* JST THIS IS THE RIGHT ONE - FROM dmesg i get L val: PLL0: 50, PLL1: 12, PLL2: 41 */
-/* 7x27 normal with GSM capable modem - PLL0 and PLL1 swapped and pll2 @ 800 */
 /* 7x27 normal with GSM capable modem - PLL0 and PLL1 swapped and pll2 @ 800 */
 static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
 	{ 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 30720 },
@@ -238,44 +238,36 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
 	{ 0, 200000, ACPU_PLL_2, 2, 3,  66667, 2, 4,  61440 },
 	{ 1, 245760, ACPU_PLL_1, 1, 0, 122880, 1, 4,  61440 },
 	{ 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 122880 },
-#ifndef OVERCLOCK_AHB
-/* Conservative AHB overclocking */
-	{ 0, 396800, ACPU_PLL_2, 2, 1, 132267, 2, 5, 122880 },
+	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 122880 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
-	{ 1, 787200, ACPU_PLL_2, 2, 0, 196800, 3, 7, 122880 },
-	{ 1, 806400, ACPU_PLL_2, 2, 0, 201600, 3, 7, 122880 },
-	{ 1, 825600, ACPU_PLL_2, 2, 0, 206400, 3, 7, 122880 },
-	{ 1, 844800, ACPU_PLL_2, 2, 0, 211200, 3, 7, 122880 },
-	{ 1, 864000, ACPU_PLL_2, 2, 0, 216000, 3, 7, 122880 },
-	{ 1, 883200, ACPU_PLL_2, 2, 0, 220800, 3, 7, 122880 },
-	{ 1, 902400, ACPU_PLL_2, 2, 0, 225600, 3, 7, 122880 },
-	{ 1, 921600, ACPU_PLL_2, 2, 0, 230400, 3, 7, 122880 },
-	{ 1, 940800, ACPU_PLL_2, 2, 0, 235200, 3, 7, 122880 },
-	{ 1, 960000, ACPU_PLL_2, 2, 0, 240000, 3, 7, 122880 },
-	{ 1, 979200, ACPU_PLL_2, 2, 0, 244800, 3, 7, 122880 },
-	{ 1, 998400, ACPU_PLL_2, 2, 0, 249600, 3, 7, 122880 },
-	{ 1, 1017600, ACPU_PLL_2, 2, 0, 254400, 3, 7, 122880 },
-	{ 1, 1036800, ACPU_PLL_2, 2, 0, 259200, 3, 7, 122880 },
-#else
-/* Aggressive AHB overclocking */
-	{ 0, 396800, ACPU_PLL_2, 2, 1, 198400, 1, 5, 122880 },
-	{ 1, 480000, ACPU_PLL_0, 4, 1, 240000, 1, 6, 122880 },
-	{ 1, 787200, ACPU_PLL_2, 2, 0, 262400, 2, 7, 122880 },
-	{ 1, 806400, ACPU_PLL_2, 2, 0, 268800, 2, 7, 122880 },
-	{ 1, 825600, ACPU_PLL_2, 2, 0, 275200, 2, 7, 122880 },
-	{ 1, 844800, ACPU_PLL_2, 2, 0, 281600, 2, 7, 122880 },
-	{ 1, 864000, ACPU_PLL_2, 2, 0, 288000, 2, 7, 122880 },
-	{ 1, 883200, ACPU_PLL_2, 2, 0, 294400, 2, 7, 122880 },
-	{ 1, 902400, ACPU_PLL_2, 2, 0, 300800, 2, 7, 122880 },
-	{ 1, 921600, ACPU_PLL_2, 2, 0, 307200, 2, 7, 122880 },
-	{ 1, 940800, ACPU_PLL_2, 2, 0, 313600, 2, 7, 122880 },
-	{ 1, 960000, ACPU_PLL_2, 2, 0, 320000, 2, 7, 122880 },
-	{ 1, 979200, ACPU_PLL_2, 2, 0, 326400, 2, 7, 122880 },
-	{ 1, 998400, ACPU_PLL_2, 2, 0, 332800, 2, 7, 122880 },
-	{ 1, 1017600, ACPU_PLL_2, 2, 0, 339200, 2, 7, 122880 },
-	{ 1, 1036800, ACPU_PLL_2, 2, 0, 345600, 2, 7, 122880 },
-#endif /* OVERCLOCK_AHB */
+	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 122880 },
+#ifndef OVERCLOCK_AHB
+	// Overclock Frequencies, try using pll0 (the one running at higher V, it MUST work, it works on franco kernel)
+	{ 1, 806400, ACPU_PLL_2, 2, 0, 201600, 3, 7, 122880 }, //42
+	{ 1, 825600, ACPU_PLL_2, 2, 0, 206400, 3, 7, 122880 }, //43
+	{ 1, 844800, ACPU_PLL_2, 2, 0, 211200, 3, 7, 122880 }, //44
+	{ 1, 864000, ACPU_PLL_2, 2, 0, 216000, 3, 7, 122880 }, //45
+	{ 1, 883200, ACPU_PLL_2, 2, 0, 220800, 3, 7, 122880 }, //46
+	{ 1, 902400, ACPU_PLL_2, 2, 0, 225600, 3, 7, 122880 }, //47
+	{ 1, 921600, ACPU_PLL_2, 2, 0, 230400, 3, 7, 122880 }, //48
+    { 1, 940800, ACPU_PLL_2, 2, 0, 235200, 3, 7, 122880 }, //49
+    { 1, 960000, ACPU_PLL_2, 2, 0, 240000, 3, 7, 122880 }, //50
+    { 1, 979200, ACPU_PLL_2, 2, 0, 244800, 3, 7, 122880 }, //51
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
+#else
+	// Overclock Frequencies, try using pll0 (the one running at higher V, it MUST work, it works on franco kernel)
+	{ 1, 806400, ACPU_PLL_2, 2, 0, 201600, 2, 7, 122880 }, //42
+	{ 1, 825600, ACPU_PLL_2, 2, 0, 206400, 2, 7, 122880 }, //43
+	{ 1, 844800, ACPU_PLL_2, 2, 0, 211200, 2, 7, 122880 }, //44
+	{ 1, 864000, ACPU_PLL_2, 2, 0, 216000, 2, 7, 122880 }, //45
+	{ 1, 883200, ACPU_PLL_2, 2, 0, 220800, 2, 7, 122880 }, //46
+	{ 1, 902400, ACPU_PLL_2, 2, 0, 225600, 2, 7, 122880 }, //47
+	{ 1, 921600, ACPU_PLL_2, 2, 0, 230400, 2, 7, 122880 }, //48
+    { 1, 940800, ACPU_PLL_2, 2, 0, 235200, 2, 7, 122880 }, //49
+    { 1, 960000, ACPU_PLL_2, 2, 0, 240000, 2, 7, 122880 }, //50
+    { 1, 979200, ACPU_PLL_2, 2, 0, 244800, 2, 7, 122880 }, //51
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
+#endif /* OVERCLOCK_AHB */
 };
 
 /* 7x27 normal with CDMA-only modem - PLL0 and PLL1 swapped and pll2 @ 800 */
@@ -346,7 +338,7 @@ static struct pll_freq_tbl_map acpu_freq_tbl_list[] = {
 };
 
 #ifdef CONFIG_CPU_FREQ_MSM
-static struct cpufreq_frequency_table freq_table[40];
+static struct cpufreq_frequency_table freq_table[20];
 
 static void __init cpufreq_table_init(void)
 {
@@ -496,7 +488,7 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	// revert to a11_div overclock 
 	a11_div = hunt_s->a11clk_src_div;
 	/* jst : To understand, suppose i forced a clock of 921600  */
-	if(hunt_s->a11clk_khz>787200) {
+	if(hunt_s->a11clk_khz>800000) {
 					a11_div = 0;
 					/* Change the speed of PLL2*/
 					writel(hunt_s->a11clk_khz/19200, PLLn_L_VAL(2)); /* jst : I get 921600/19200 = 48 and write it into PLL2 (it has maximum 41 corresponding to 800 Mhz)*/
@@ -536,7 +528,7 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 
 	// Recover from overclocking
 	// jst : franciscofranco removed this... don't really know why, I asked him and awaiting answer :) 
-	if(hunt_s->pll == 2 && hunt_s->a11clk_khz<=787200) {
+	if(hunt_s->pll == 2 && hunt_s->a11clk_khz<=800000) {
 		// Restore the speed of PLL2
 		writel(41, PLLn_L_VAL(2)); // jst : I reset 41 to PLL2, its natural value
 		cpu_relax(); // magic / more magic
