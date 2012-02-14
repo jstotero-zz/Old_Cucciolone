@@ -241,7 +241,6 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
 	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 122880 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
 	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 122880 },
-#ifndef OVERCLOCK_AHB
 	// Overclock Frequencies, try using pll0 (the one running at higher V, it MUST work, it works on franco kernel)
 	{ 1, 806400, ACPU_PLL_2, 2, 0, 201600, 3, 7, 122880 }, //42
 	{ 1, 825600, ACPU_PLL_2, 2, 0, 206400, 3, 7, 122880 }, //43
@@ -254,20 +253,6 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
     { 1, 960000, ACPU_PLL_2, 2, 0, 240000, 3, 7, 122880 }, //50
     { 1, 979200, ACPU_PLL_2, 2, 0, 244800, 3, 7, 122880 }, //51
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
-#else
-	// Overclock Frequencies, try using pll0 (the one running at higher V, it MUST work, it works on franco kernel)
-	{ 1, 806400, ACPU_PLL_2, 2, 0, 201600, 2, 7, 122880 }, //42
-	{ 1, 825600, ACPU_PLL_2, 2, 0, 206400, 2, 7, 122880 }, //43
-	{ 1, 844800, ACPU_PLL_2, 2, 0, 211200, 2, 7, 122880 }, //44
-	{ 1, 864000, ACPU_PLL_2, 2, 0, 216000, 2, 7, 122880 }, //45
-	{ 1, 883200, ACPU_PLL_2, 2, 0, 220800, 2, 7, 122880 }, //46
-	{ 1, 902400, ACPU_PLL_2, 2, 0, 225600, 2, 7, 122880 }, //47
-	{ 1, 921600, ACPU_PLL_2, 2, 0, 230400, 2, 7, 122880 }, //48
-    { 1, 940800, ACPU_PLL_2, 2, 0, 235200, 2, 7, 122880 }, //49
-    { 1, 960000, ACPU_PLL_2, 2, 0, 240000, 2, 7, 122880 }, //50
-    { 1, 979200, ACPU_PLL_2, 2, 0, 244800, 2, 7, 122880 }, //51
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
-#endif /* OVERCLOCK_AHB */
 };
 
 /* 7x27 normal with CDMA-only modem - PLL0 and PLL1 swapped and pll2 @ 800 */
