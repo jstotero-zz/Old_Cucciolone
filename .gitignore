@@ -10,7 +10,8 @@
 # Normal rules
 #
 
-setenv_jst.sh
+releases/
+*.zip
 
 .*
 *.o

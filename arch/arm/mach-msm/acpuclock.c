@@ -501,10 +501,8 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	/* Program clock source and divider */
 	reg_clkctl = readl(A11S_CLK_CNTL_ADDR);
 	reg_clkctl &= ~(0xFF << (8 * src_sel));
-	reg_clkctl |=a11_div; //OC
 	reg_clkctl |= hunt_s->a11clk_src_sel << (4 + 8 * src_sel);
-	reg_clkctl |=a11_div; //OC
-	reg_clkctl |= hunt_s->a11clk_src_div << (0 + 8 * src_sel);
+	reg_clkctl |= a11_div << (0 + 8 * src_sel);
 	writel(reg_clkctl, A11S_CLK_CNTL_ADDR);
 
 	/* Program clock source selection */
@@ -513,9 +511,9 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 
 	// Recover from overclocking
 	// jst : franciscofranco removed this... don't really know why, I asked him and awaiting answer :) 
-	if(hunt_s->pll == 2 && hunt_s->a11clk_khz<=800000) {
+	if(hunt_s->pll == ACPU_PLL_2 && hunt_s->a11clk_khz<=800000) {
 		// Restore the speed of PLL2
-		writel(41, PLLn_L_VAL(2)); // jst : I reset 41 to PLL2, its natural value
+		writel(PLL_800_MHZ, PLLn_L_VAL(2)); // jst : I reset 41 to PLL2, its natural value
 		cpu_relax(); // magic / more magic
 		udelay(50);
 	}
